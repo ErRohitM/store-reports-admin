@@ -21,14 +21,18 @@ async def generate_reports(request: Request):
     :param request:
     :return: report_id
     """
-    store_id = "7a242d0e-309c-4915-9755-e9019d69108d"
-    # get start, stop local times
-    # in business window
-    report_time_windows = StoreReportTimeWindow()
-    get_local_time_windows_n_days = await report_time_windows.main(store_id)
+    store_ids = ["1632a271-fdc4-45ad-8dee-4383d49cde6b"]
+    uptime_downtime_windows = []
+    for store_id in store_ids:
+        # get start, stop local times
+        # in business window
+        for window in ["last_hour", "last_day", "last_week"]:
+            report_time_windows = StoreReportTimeWindow()
+            get_local_time_windows_n_days = await report_time_windows.main(store_id, window)
 
-    # extrapolate uptime and downtime
-    extrapolate_report_windows = StoreBusinessAnalyzer()
-    uptime_downtime_windows = await extrapolate_report_windows.main(store_id, get_local_time_windows_n_days)
+            # extrapolate uptime and downtime
+            extrapolate_report_windows = StoreBusinessAnalyzer()
+            uptime_downtime_window = await extrapolate_report_windows.main(store_id, get_local_time_windows_n_days, window)
+            uptime_downtime_windows.append(f"{store_id} {uptime_downtime_window}")
 
     return uptime_downtime_windows
