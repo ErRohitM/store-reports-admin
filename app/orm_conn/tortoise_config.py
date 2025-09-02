@@ -7,6 +7,7 @@ TORTOISE_ORM = {
             "models": [
                 "app.models.stores",
                 "app.models.business_menu",
+                "app.models.report",
                 "aerich.models"
             ],
             "default_connection": "default",

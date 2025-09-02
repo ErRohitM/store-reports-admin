@@ -25,6 +25,11 @@ CREATE TABLE IF NOT EXISTS "store_menu_hour" (
     CONSTRAINT "uid_store_menu__store_i_121a6f" UNIQUE ("store_id", "day_of_week", "start_time_local", "end_time_local")
 );
 COMMENT ON TABLE "store_menu_hour" IS 'business hours of all the stores';
+CREATE TABLE IF NOT EXISTS "storereportsstatus" (
+    "report_id" UUID NOT NULL PRIMARY KEY,
+    "status" BOOL NOT NULL DEFAULT False
+);
+COMMENT ON TABLE "storereportsstatus" IS 'Report status model';
 CREATE TABLE IF NOT EXISTS "aerich" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "version" VARCHAR(255) NOT NULL,
