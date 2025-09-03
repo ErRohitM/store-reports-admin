@@ -1,19 +1,18 @@
 import os
 import time
-from collections import defaultdict
 from datetime import datetime, timedelta, timezone, date
 from multiprocessing import cpu_count, Pool
-from typing import List, Any, Coroutine, Tuple
+from typing import Any
 
 import pandas as pd
-from pandas import DataFrame, Series
+from pandas import DataFrame
 from tortoise.expressions import Q
 
 from app.db_conn.redis_confg import ReportStatus
 from app.models.business_menu import StoreMenuHour
 from app.models.stores import StorePolls, StoreTimeZone
 from app.models.report import StoreReportsStatus, store_report_status
-from app.utils.common import convert_to_business_timezone, convert_local_to_utc, strftime
+from app.utils.common import convert_to_business_timezone, strftime
 
 
 class BusinessAnalyzer:

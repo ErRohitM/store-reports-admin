@@ -7,12 +7,12 @@ from app.models.report import StoreReportsStatus, store_report_status
 from app.utils.data_processor import BusinessAnalyzer
 from app.utils.report_management import ReportManager
 
-router = APIRouter(prefix="/reports", tags=["utils"])
+router = APIRouter(prefix="/reports", tags=["Reports"])
 
 # Initialize report manager
 report_manager = ReportManager(redis_client)
 
-@router.get("/trigger_report", tags=["Reports"], response_model=dict)
+@router.get("/trigger_report", response_model=dict)
 async def generate_reports(background_tasks: BackgroundTasks):
     try:
         """
@@ -56,7 +56,12 @@ async def generate_reports(background_tasks: BackgroundTasks):
 @router.get("/get_report/{report_id}", tags=["Reports"], response_model=dict)
 async def get_report_status(report_id: str):
     """
-    Get current status of report generation
+    Get Report Id,
+    current status,
+     Logs,
+     csv file (downloadable) -> if complete
+     data availability status
+     of report generation
     """
     status_info = await report_manager.get_report_status(report_id)
 
@@ -88,33 +93,3 @@ async def get_report_status(report_id: str):
             response["estimated_completion_seconds"] = int(remaining_time)
 
     return response
-
-
-@router.get("/get_report/{report_id}", tags=["Reports"], response_model=dict)
-async def download_report(report_id: str):
-    """
-    Downloadable completed report data
-    """
-    # Check if report is completed
-    status_info = await report_manager.get_report_status(report_id)
-
-    if not status_info:
-        raise HTTPException(status_code=404, detail="Report not found")
-
-    if status_info["status"] != ReportStatus.COMPLETED:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Report is not ready. Current status: {status_info['status']}"
-        )
-
-    # Get report data
-    report_data = await report_manager.get_report_data(report_id)
-
-    if not report_data:
-        raise HTTPException(status_code=404, detail="Report data not found")
-
-    return {
-        "report_id": report_id,
-        "generated_at": status_info.get("updated_at"),
-        "data": report_data
-    }

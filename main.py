@@ -22,8 +22,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 app = FastAPI(
     lifespan=lifespan,
-    title="Fitness Studio Booking API",
-    description="A comprehensive booking system for fitness classes",
+    title="Store Monitoring With FastAPI",
+    description="""
+    Monitors multiple restaurants across the US to track whether they are online during business hours. 
+    Occasionally, stores may go offline unexpectedly. 
+    Restaurant owners want reports showing how often this has occurred in the past.
+    """,
     version="1.0.0"
 )
 allowed_origins = [

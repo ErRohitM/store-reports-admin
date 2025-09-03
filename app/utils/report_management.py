@@ -1,6 +1,6 @@
 import json
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from app.db_conn.redis_confg import REPORT_STATUS_KEY, ReportStatus, REPORT_DATA_KEY
@@ -40,7 +40,6 @@ class ReportManager:
             result = json.dumps(data, default=json_serializer)
             return result
         except Exception as e:
-            print(f"❌ Serialization error: {e}")
             return json.dumps({"error": "serialization_failed", "data": str(data)})
 
     def _deserialize_data(self, json_str):
